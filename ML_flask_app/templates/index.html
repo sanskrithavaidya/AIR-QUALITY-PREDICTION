@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Air Quality Prediction</title>
+
+    <style>
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Blurred background layer */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    background: url('/static/bg.jpg.png') no-repeat center center/cover;
+
+    filter: blur(4px) brightness(0.6);
+    z-index: -1;
+}
+
+/* Center container */
+.container {
+    background: rgba(0, 0, 0, 0.6);
+    padding: 30px;
+    border-radius: 15px;
+    width: 380px;
+    text-align: center;
+    color: white;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    max-height: 92vh;
+    overflow-y: auto;
+}
+
+.explain-section {
+    margin-top: 20px;
+    text-align: left;
+}
+
+.explain-section h3 {
+    font-size: 15px;
+    margin-bottom: 6px;
+    color: #f1f1f1;
+}
+
+.explain-section img {
+    width: 100%;
+    border-radius: 8px;
+    background: white;
+    padding: 6px;
+    box-sizing: border-box;
+}
+
+/* Heading */
+h2 {
+    margin-bottom: 20px;
+}
+
+/* Inputs */
+input {
+    width: 90%;
+    padding: 10px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 6px;
+}
+
+/* Button */
+button {
+    width: 95%;
+    padding: 10px;
+    margin-top: 12px;
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #c0392b;
+}
+
+/* Result */
+.result {
+    margin-top: 15px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* Center alignment */
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+</style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Air Quality Prediction</h2>
+
+        <form action="/predict" method="post">
+            <input type="text" name="f1" placeholder="PT08.S1(CO)" required>
+            <input type="text" name="f2" placeholder="PT08.S2(NMHC)" required>
+            <input type="text" name="f3" placeholder="PT08.S3(NOx)" required>
+            <input type="text" name="f4" placeholder="PT08.S4(NO2)" required>
+            <input type="text" name="f5" placeholder="PT08.S5(O3)" required>
+            <input type="text" name="f6" placeholder="Temperature (T)" required>
+            <input type="text" name="f7" placeholder="Relative Humidity (RH)" required>
+            <input type="text" name="f8" placeholder="Absolute Humidity (AH)" required>
+
+            <button type="submit">Predict</button>
+        </form>
+
+        <div class="result">
+            {{ prediction_text }}
+        </div>
+
+        {% if show_explanation %}
+        <div class="explain-section">
+            <h3>Why this prediction? (SHAP local explanation)</h3>
+            <img src="{{ url_for('static', filename='shap_local.png') }}?v={{ cache_buster }}" alt="SHAP waterfall plot for this prediction">
+        </div>
+        {% endif %}
+
+        <div class="explain-section">
+            <h3>Global Feature Importance</h3>
+            <img src="{{ url_for('static', filename='shap_summary_bar.png') }}" alt="SHAP global feature importance bar chart">
+        </div>
+
+        <div class="explain-section">
+            <h3>Feature Effect Spread (Beeswarm)</h3>
+            <img src="{{ url_for('static', filename='shap_summary_beeswarm.png') }}" alt="SHAP beeswarm summary plot">
+        </div>
+    </div>
+
+</body>
+</html>
