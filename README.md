@@ -1,7 +1,7 @@
 # Air Quality Prediction (Flask + SHAP)
 
 A Flask web app that predicts **CO (Carbon Monoxide) levels** from air quality sensor readings using a Random Forest model, with **SHAP explainability** so you can see *why* the model made a given prediction.
-
+![App UI](ML_flask_app/static/Screenshot%202026-09-01%20204648.png)
 ## Features
 
 - Predicts CO concentration from 8 sensor/environmental inputs
